@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
     # lazy check for plausibilty
     if args.decrypt and args.encrypt:
-        print "Either you encrypt or decrypt the message... chose wisely"
+        print "Either you encrypt or decrypt the message... choose wisely"
         sys.exit(1)
 
     # do Caesar
