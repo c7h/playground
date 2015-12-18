@@ -1,23 +1,37 @@
 import socket
 from BaseHTTPServer import HTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
+from urlparse import urlparse, parse_qs
 
 from caesar import CaesarCipher
 
 class CaesarHandler(SimpleHTTPRequestHandler):
   def do_GET(self):
+    url = urlparse(self.path)
+    caesar = CaesarCipher()
+    message_dict = parse_qs(url.query)
+    try:
+      message = message_dict.get("message").pop()
+    except:
+      message = ''
+    try:
+      shift = message_dict.get("shift").pop()
+    except:
+      shift = 3
     # import pdb; pdb.set_trace()
-    if self.path == '/caesar/encrypt':
+    if url.path == '/caesar/encrypt':
+      encrypted = caesar.encrypt(message, shift)
       self.send_response(200)
       self.send_header('Content-type', 'application/json')
       self.end_headers()
-      self.wfile.write("{}")
+      self.wfile.write("{'encrypted': '%s', 'shift': %i}" % (encrypted, shift))
       return
-    elif self.path == '/caesar/decrypt':
+    if url.path == '/caesar/decrypt':
+      decrypted = caesar.decrypt(message, shift)
       self.send_response(200)
       self.send_header('Content-type', 'application/json')
       self.end_headers()
-      self.wfile.write()
+      self.wfile.write("{'decrypted': '%s', 'shift': %i}" % (decrypted, shift))
       return
     else:
       self.send_response(400)
