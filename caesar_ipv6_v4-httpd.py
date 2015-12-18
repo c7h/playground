@@ -6,28 +6,33 @@ from urlparse import urlparse, parse_qs
 from caesar import CaesarCipher
 
 class CaesarHandler(SimpleHTTPRequestHandler):
-  def do_GET(self):
-    url = urlparse(self.path)
-    caesar = CaesarCipher()
+  caesar = CaesarCipher()
+
+  def parse_args(self, path):
+    url = urlparse(path)
     message_dict = parse_qs(url.query)
     try:
       message = message_dict.get("message").pop()
     except:
       message = ''
     try:
-      shift = message_dict.get("shift").pop()
+      shift = int(message_dict.get("shift").pop())
     except:
       shift = 3
+    return (url.path, message, shift)
+
+  def do_GET(self):
+    path, message, shift = self.parse_args(self.path)
     # import pdb; pdb.set_trace()
-    if url.path == '/caesar/encrypt':
-      encrypted = caesar.encrypt(message, shift)
+    if path == '/caesar/encrypt':
+      encrypted = self.caesar.encrypt(message, shift)
       self.send_response(200)
       self.send_header('Content-type', 'application/json')
       self.end_headers()
       self.wfile.write("{'encrypted': '%s', 'shift': %i}" % (encrypted, shift))
       return
-    if url.path == '/caesar/decrypt':
-      decrypted = caesar.decrypt(message, shift)
+    if path == '/caesar/decrypt':
+      decrypted = self.caesar.decrypt(message, shift)
       self.send_response(200)
       self.send_header('Content-type', 'application/json')
       self.end_headers()
