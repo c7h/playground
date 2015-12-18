@@ -21,8 +21,11 @@ class CaesarCipher(object):
         plaintext = text.upper()
         ciphertext = ""
         for character in plaintext:
-            position_in_alphabet = self.alphabet.index(character)
-            ciphertext += self.alphabet[position_in_alphabet + shift]
+            if character == ' ':
+                ciphertext += ' '
+            else:
+                position_in_alphabet = self.alphabet.index(character)
+                ciphertext += self.alphabet[position_in_alphabet + shift]
         return ciphertext
 
 if __name__ == "__main__":
