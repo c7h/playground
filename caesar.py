@@ -1,6 +1,6 @@
 # An implementation of the simple Caesar Cipher
 # based on https://github.com/jmalk/dailypython.git
-# and modified for beaconinside test with minor improvements
+# and modified with minor improvements
 
 import argparse
 import sys
