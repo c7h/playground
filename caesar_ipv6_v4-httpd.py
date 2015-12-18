@@ -22,3 +22,9 @@ class CaesarHandler(SimpleHTTPRequestHandler):
       self.send_response(400)
       return
       #return SimpleHTTPRequestHandler.do_GET(self)
+
+class HTTPServerV6(HTTPServer):
+  address_family = socket.AF_INET6
+
+class HTTPServerV4(HTTPServer):
+  address_family = socket.AF_INET4
