@@ -18,6 +18,8 @@ class CaesarCipher(object):
         return self.__doCrypto(ciphertext, -shift_by)
 
     def __doCrypto(self, text, shift):
+        if not isinstance(text, str):
+            raise ValueError("please provide a string")
         plaintext = text.upper()
         ciphertext = ""
         for character in plaintext:
@@ -45,6 +47,11 @@ if __name__ == "__main__":
     # do Caesar
     caesar = CaesarCipher()
     if args.encrypt:
-        print caesar.encrypt(args.message, args.shift)
+        fnc = caesar.encrypt
     elif args.decrypt:
-        print caesar.decrypt(args.message, args.shift)
+        fnc = caesar.decrypt
+    try:
+        print fnc(args.message, args.shift)
+    except ValueError as e:
+        print "could not compute:", e
+        sys.exit(1)
